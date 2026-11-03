@@ -1,3 +1,24 @@
+# SmartGallery Library · agent-ready fork
+
+This fork adds a permanent keeper library and agent metadata tools to
+[biagiomaf's SmartGallery DAM](https://github.com/biagiomaf/smart-comfyui-gallery).
+The upstream gallery, clustering, ratings, and interface remain available.
+
+- **Keep** an image or video as a byte-verified independent copy, with its full available UI graph and API prompt.
+- Browse a separate **Library** with search, collections, tags, ratings, workflow/prompt grouping, sourced facts, and restorable edit history.
+- Open SmartGallery from its own **ComfyUI left-sidebar icon**, expand it, and load a keeper's graph without queuing a generation.
+- Use **MCP, CLI, and the included agent skill** to save keepers and maintain metadata with provenance and revision checks.
+
+**[Installation and usage →](docs/AGENT-LIBRARY.md)** · **[Agent skill →](agent-skill/smartgallery-library/SKILL.md)**
+
+The permanent library belongs outside ComfyUI output. Normal library use runs locally
+without an account, payment, or internet. Optional upstream AI features have separate
+setup requirements. Original prompts/media, local paths, and runtime data are not
+part of this repository. This is an independent MIT-licensed fork, not an official
+upstream release. Upstream documentation follows below.
+
+---
+
 <div align="center">
   
   <h1>SmartGallery DAM</h1>

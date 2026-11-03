@@ -3666,7 +3666,7 @@ def strip_media_metadata(input_path, output_path, file_type):
 @app.route('/galleryout/')
 @app.route('/')
 def gallery_redirect_base():
-    return redirect(url_for('gallery_view', folder_key='_root_'))
+    return redirect(url_for('gallery_view', folder_key='_root_', **({'library': request.args['library']} if 'library' in request.args else {})))
 
 @app.route('/galleryout/login', methods=['POST'])
 def exhibition_login():
@@ -11777,6 +11777,15 @@ def api_cluster_info(hash_type, hash_val):
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+from sg_library.web import register as register_keeper_library
+register_keeper_library(
+    app, root=os.environ.get('SG_LIBRARY_PATH', os.path.join(BASE_SMARTGALLERY_PATH, 'Library')),
+    sources=[BASE_INPUT_PATH, BASE_OUTPUT_PATH], extractor=extract_workflow,
+    resolve_output=get_file_info_from_db, accessible=is_file_accessible,
+    management=management_api_only, connection=get_db_connection, input_root=BASE_INPUT_PATH,
+    clusterer=compute_workflow_hashes,
+)
+
 if __name__ == '__main__':
 
     # --- OS SIGNAL HANDLER FOR TMUX/LINUX/MAC PORT RELEASE ---
@@ -11886,7 +11895,8 @@ if __name__ == '__main__':
         print(f"{Colors.YELLOW}{Colors.BOLD}*** SECURE TEAM MODE ACTIVE (--force-login) ***{Colors.RESET}")
         print(f"Index view is protected. Users must log in to view or manage files.")
     
-    check_for_updates()
+    if os.environ.get('SG_CHECK_UPDATES', 'false').lower() == 'true':
+        check_for_updates()
     print_configuration()
 
     # --- CHECK: CRITICAL OUTPUT PATH CHECK (Blocking) ---
@@ -11938,7 +11948,7 @@ if __name__ == '__main__':
         s.close()
         
         # Only print if it's a valid LAN IP (ignoring local loopback)
-        if local_ip and local_ip != "127.0.0.1":
+        if local_ip and local_ip != "127.0.0.1" and os.environ.get('SG_HOST', '127.0.0.1') == '0.0.0.0':
             print(f"👉 Network Access: {Colors.CYAN}{Colors.BOLD}http://{local_ip}:{SERVER_PORT}/galleryout/{Colors.RESET}")
     except Exception:
         # If the machine is completely offline or strict Docker network rules apply,
@@ -11971,10 +11981,10 @@ if __name__ == '__main__':
             _cq_logger.setLevel(logging.CRITICAL)
             _cq_logger.disabled = True
             _cq_logger.propagate = False
-        serve(app, host='0.0.0.0', port=SERVER_PORT, threads=8, connection_limit=150, channel_timeout=120, asyncore_use_poll=True, max_request_body_size=2147483648, _quiet=True)
+        serve(app, host=os.environ.get('SG_HOST', '127.0.0.1'), port=SERVER_PORT, threads=8, connection_limit=150, channel_timeout=120, asyncore_use_poll=os.name != 'nt', max_request_body_size=2147483648, _quiet=True)
     else:
         # DEVELOPMENT MODE: Falling back to Flask built-in server
         print(f"{Colors.YELLOW}WARNING: 'waitress' not found. Using Flask development server.{Colors.RESET}")
         print(f"INFO: For better performance, install it with: pip install waitress")
-        app.run(host='0.0.0.0', port=SERVER_PORT, debug=False)
+        app.run(host=os.environ.get('SG_HOST', '127.0.0.1'), port=SERVER_PORT, debug=False)
     

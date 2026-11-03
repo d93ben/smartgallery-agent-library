@@ -1,0 +1,10 @@
+<dialog id="sg-library" aria-labelledby="sg-library-title">
+  <header class="sg-lib-header">
+    <div><span class="sg-eyebrow">SMARTGALLERY / YOUR ARCHIVE</span><h2 id="sg-library-title">The keepers.</h2><p>Originals, workflows, and everything worth remembering.</p></div>
+    <button class="sg-icon-button" id="sg-close" aria-label="Close library">×</button>
+  </header>
+  <div class="sg-lib-toolbar"><label class="sg-search"><span>⌕</span><input id="sg-search" type="search" placeholder="Search your library" aria-label="Search library"></label><select id="sg-group" class="sg-button" aria-label="Group keepers"><option value="">Recent</option><option value="workflow">By workflow</option><option value="prompt">By prompt</option><option value="collection">By collection</option><option value="rating">By rating</option></select><span id="sg-count"></span></div>
+  <p id="sg-message" role="status"></p>
+  <div class="sg-lib-body"><section id="sg-grid" aria-label="Saved media"></section><section id="sg-detail" hidden aria-label="Asset details"></section></div>
+  <footer class="sg-lib-footer"><span><i></i> Stored on this computer</span><span>Copies stay here when you clear your outputs.</span></footer>
+</dialog>

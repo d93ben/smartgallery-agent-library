@@ -24,6 +24,15 @@ wheels/
 venv/
 env/
 ENV/
+.venv/
+local.json
+gallery.local.json
+.pytest_cache/
+test-results/
+Library/
+SmartGallery-Data/
+Media-Library/
+*.pid
 
 # Database
 *.db

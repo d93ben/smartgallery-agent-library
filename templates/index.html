@@ -259,9 +259,12 @@ document.addEventListener('focusout', function(e) {
 }
 </style>
 
+<link rel="stylesheet" href="/static/css/library.css">
+<script defer src="/static/js/library.js"></script>
 </head>
 
 <body>
+    {% include 'library.html' %}
     <div id="notification-container"></div>
     <!-- GENERAL OPTIONS POPOVER -->
     <div id="options-popover">
@@ -751,6 +754,7 @@ document.addEventListener('focusout', function(e) {
     <!-- === ROW 1: NAVIGATION & AI MANAGER === -->
     <div class="toolbar-container" style="padding-bottom: 0;">
         <div class="toolbar-row mobile-header-row">
+            <button class="glass-btn sg-open-library" onclick="SG.open()" title="Open your permanent keeper library">◇ Library</button>
             <!-- Left: Breadcrumbs -->
             <div class="breadcrumbs" style="padding:0; border:none; background:transparent;">
                 <div class="breadcrumb-links" style="{% if (is_ai_search and ' ||| ' not in ai_query) or is_global_search %}display:none;{% endif %}">
@@ -1303,6 +1307,7 @@ document.addEventListener('focusout', function(e) {
             <div id="compare-menu-sep" class="sel-separator" style="display:none;"></div>
             
             <!-- 4. File Operations -->
+            <button onclick="SG.keepSelected(Array.from(selectedFiles))">◇ Keep in Library</button>
             <button id="copy-selected-btn">Cc Copy to Folder...</button>
             <button id="move-selected-btn">📁 Move to Folder...</button>
             <button id="download-zip-btn">📦 Download as Zip</button>
@@ -1322,6 +1327,7 @@ document.addEventListener('focusout', function(e) {
             </div>
             
             <div id="lightbox-toolbar">
+                <button class="sg-keep-button" title="Save an independent copy and full workflow" onclick="SG.keep(currentLightboxFile.id)">◇ Keep</button>
                 <button id="lightbox-help-btn" title="Menu Actions & Shortcuts (/)" style="font-size: 0.9rem; font-weight: bold; padding: 0 12px !important; min-width: auto !important; letter-spacing: 0.5px;">/&nbsp;MENU</button>
                 <button id="lightbox-zoom-out" title="Zoom Out">-</button>
                 <button id="lightbox-zoom-in" title="Zoom In">+</button>
