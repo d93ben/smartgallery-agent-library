@@ -171,7 +171,7 @@ class Library:
                 if record['original']['sha256'] == digest:
                     media = self.folder(record['id']) / record['original']['file']
                     if not media.is_file() or sha256(media) != digest:
-                        raise Conflict('An existing keeper is missing or damaged. Restore it from backup before saving again.')
+                        raise Conflict('An existing saved asset is missing or damaged. Restore it from backup before saving again.')
                     return {'created': False, 'record': record}
             asset_id = uuid4().hex
             staging = self.root / ('.pending-' + asset_id)

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartGallery: {{ current_folder_info.display_name }}</title>
+    <title>Smart Media Manager: {{ current_folder_info.display_name }}</title>
     <link rel="icon" type="image/png" href="{{ app_logo_b64 }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css', v='2.24.4') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/collections.css', v='2.24.4') }}">
@@ -566,7 +566,7 @@ document.addEventListener('focusout', function(e) {
                 <img src="{{ app_logo_b64 }}" alt="Logo" class="brand-logo">
                 <div class="brand-info">
                     <h1 style="display:flex; align-items:center; gap: 6px;">
-                        SmartGallery 
+                        Smart Media Manager
                         <button onclick="event.preventDefault(); showDamInfoOverlay();" class="dam-badge-btn">
                             DAM
                         </button>
@@ -754,7 +754,7 @@ document.addEventListener('focusout', function(e) {
     <!-- === ROW 1: NAVIGATION & AI MANAGER === -->
     <div class="toolbar-container" style="padding-bottom: 0;">
         <div class="toolbar-row mobile-header-row">
-            <button class="glass-btn sg-open-library" onclick="SG.open()" title="Open your permanent keeper library">◇ Library</button>
+            <button class="glass-btn sg-open-library" onclick="SG.open()" title="Open Smart Media Manager">◇ Smart Media Manager</button>
             <!-- Left: Breadcrumbs -->
             <div class="breadcrumbs" style="padding:0; border:none; background:transparent;">
                 <div class="breadcrumb-links" style="{% if (is_ai_search and ' ||| ' not in ai_query) or is_global_search %}display:none;{% endif %}">
@@ -1307,7 +1307,7 @@ document.addEventListener('focusout', function(e) {
             <div id="compare-menu-sep" class="sel-separator" style="display:none;"></div>
             
             <!-- 4. File Operations -->
-            <button onclick="SG.keepSelected(Array.from(selectedFiles))">◇ Keep in Library</button>
+            <button onclick="SG.keepSelected(Array.from(selectedFiles))">◇ Add to Smart Media Manager</button>
             <button id="copy-selected-btn">Cc Copy to Folder...</button>
             <button id="move-selected-btn">📁 Move to Folder...</button>
             <button id="download-zip-btn">📦 Download as Zip</button>
@@ -1327,7 +1327,7 @@ document.addEventListener('focusout', function(e) {
             </div>
             
             <div id="lightbox-toolbar">
-                <button class="sg-keep-button" title="Save an independent copy and full workflow" onclick="SG.keep(currentLightboxFile.id)">◇ Keep</button>
+                <button class="sg-keep-button" title="Save an independent copy and full workflow" onclick="SG.keep(currentLightboxFile.id)">◇ Add to Smart Media Manager</button>
                 <button id="lightbox-help-btn" title="Menu Actions & Shortcuts (/)" style="font-size: 0.9rem; font-weight: bold; padding: 0 12px !important; min-width: auto !important; letter-spacing: 0.5px;">/&nbsp;MENU</button>
                 <button id="lightbox-zoom-out" title="Zoom Out">-</button>
                 <button id="lightbox-zoom-in" title="Zoom In">+</button>
@@ -2515,10 +2515,10 @@ document.addEventListener('focusout', function(e) {
             <!-- Fixed close X -->
             <button onclick="hideDamInfoOverlay()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #888; font-size: 1.5rem; cursor: pointer; padding: 5px;" title="Close">×</button>
 
-            <h2 style="margin-top:0; color:white; font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">Welcome to the new SmartGallery DAM</h2>
+            <h2 style="margin-top:0; color:white; font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">Welcome to Smart Media Manager</h2>
             
             <p style="color:#ddd; line-height:1.6; font-size:1.05rem; margin-bottom: 25px;">
-                You are using the latest version of SmartGallery, now upgraded with <strong>Digital Asset Management (DAM)</strong> features.
+                Smart Media Manager is built on SmartGallery, with <strong>Digital Asset Management (DAM)</strong> features.
             </p>
 
             <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid var(--primary-color);">

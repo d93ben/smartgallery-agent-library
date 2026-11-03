@@ -1,14 +1,14 @@
-# SmartGallery Library · agent-ready fork
+# Smart Media Manager
 
-This fork adds a permanent keeper library and agent metadata tools to
+This fork adds a permanent media library and agent metadata tools to
 [biagiomaf's SmartGallery DAM](https://github.com/biagiomaf/smart-comfyui-gallery).
 The upstream gallery, clustering, ratings, and interface remain available.
 
-- **Keep** an image or video as a byte-verified independent copy, with its full available UI graph and API prompt.
+- **Add to Smart Media Manager** to save an image or video as a byte-verified independent copy, with its full available UI graph and API prompt.
 - Browse a separate **Library** with search, collections, tags, ratings, workflow/prompt grouping, sourced facts, and restorable edit history.
-- Open SmartGallery from its own **ComfyUI left-sidebar icon**, expand it, and load a keeper's graph without queuing a generation.
-- Right-click an individual ComfyUI **Media Assets** card and choose **Add to Media Library** to keep its original file directly.
-- Use **MCP, CLI, and the included agent skill** to save keepers and maintain metadata with provenance and revision checks.
+- Open Smart Media Manager from its own **ComfyUI left-sidebar icon**, expand it, and load a saved asset's graph without queuing a generation.
+- Right-click an individual ComfyUI **Media Assets** card and choose **Add to Smart Media Manager** to keep its original file directly.
+- Use **MCP, CLI, and the included agent skill** to save assets and maintain metadata with provenance and revision checks.
 
 **[Installation and usage →](docs/AGENT-LIBRARY.md)** · **[Agent skill →](agent-skill/smartgallery-library/SKILL.md)**
 
@@ -280,7 +280,7 @@ If you used SmartGallery v1 as an advanced file manager and have no need to shar
 python smartgallery.py
 ```
 
-ComfyUI is generating hundreds of files. As each one appears in the grid, you decide in real time: delete the bad seeds immediately with `Del`, move the keepers to the right folder with `M`, mark favorites with `F`, or tag them with a color status. You do all of this while generation is still running. When you want to review later, you search by prompt keywords, model name, or LoRA, pull up the full node summary for any image from months ago, monitor the queue in real time with `Shift+Q`, or compare two generations side by side with a parameter diff.
+ComfyUI is generating hundreds of files. As each one appears in the grid, you decide in real time: delete the bad seeds immediately with `Del`, move the saved assets to the right folder with `M`, mark favorites with `F`, or tag them with a color status. You do all of this while generation is still running. When you want to review later, you search by prompt keywords, model name, or LoRA, pull up the full node summary for any image from months ago, monitor the queue in real time with `Shift+Q`, or compare two generations side by side with a parameter diff.
 
 When ComfyUI is not running, the same interface works as a full file manager for all your media. No Exhibition needed, ever, unless you decide you want it.
 

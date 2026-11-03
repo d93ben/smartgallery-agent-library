@@ -8,21 +8,21 @@ export function installAssetMenu(app) {
   async function keep(assetId) {
     if (saving.has(assetId)) return;
     saving.add(assetId);
-    toast({severity: 'info', summary: 'Adding to Media Library…'});
+    toast({severity: 'info', summary: 'Adding to Smart Media Manager…'});
     try {
       const response = await api.fetchApi('/smartgallery/library/keep', {
         method: 'POST', headers: {'Content-Type': 'application/json', 'X-SG-Library': '1'},
         body: JSON.stringify({asset_id: assetId})
       });
       if (!response.headers.get('content-type')?.includes('application/json')) {
-        throw new Error(response.status === 404 ? 'Restart ComfyUI to enable the Media Library menu, then try again.' : 'ComfyUI could not save this asset. Try again.');
+        throw new Error(response.status === 404 ? 'Restart ComfyUI to enable the Smart Media Manager menu, then try again.' : 'ComfyUI could not save this asset. Try again.');
       }
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Could not add this asset.');
-      toast({severity: 'success', summary: result.created ? 'Added to Media Library' : 'Already in Media Library',
-        detail: result.title + ' · independent keeper copy'});
+      toast({severity: 'success', summary: result.created ? 'Added to Smart Media Manager' : 'Already in Smart Media Manager',
+        detail: result.title + ' · saved independent copy'});
     } catch (error) {
-      toast({severity: 'error', summary: 'Could not add to Media Library', detail: error.message});
+      toast({severity: 'error', summary: 'Could not add to Smart Media Manager', detail: error.message});
     } finally {
       saving.delete(assetId);
     }
@@ -49,14 +49,14 @@ export function installAssetMenu(app) {
     item.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
     item.id = 'sg-keep-menu-item';
     item.dataset.sgKeep = '';
-    item.setAttribute('aria-label', 'Add to Media Library');
+    item.setAttribute('aria-label', 'Add to Smart Media Manager');
     item.removeAttribute('data-p-focused');
     const action = item.querySelector('button, a');
     if (!action) return;
     action.replaceChildren();
     action.tabIndex = 0;
     const icon = document.createElement('i'); icon.className = 'sg-sidebar-icon'; icon.setAttribute('aria-hidden', 'true');
-    const label = document.createElement('span'); label.textContent = 'Add to Media Library';
+    const label = document.createElement('span'); label.textContent = 'Add to Smart Media Manager';
     action.append(icon, label);
     action.addEventListener('click', event => {
       event.preventDefault(); event.stopPropagation();

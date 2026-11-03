@@ -1,4 +1,4 @@
-/* Permanent keepers: private data stays on the local gallery server. */
+/* Saved media: private data stays on the local gallery server. */
 (() => {
   'use strict';
   const base = '/galleryout/library/api/';
@@ -43,10 +43,10 @@
     const data = await api('assets?q=' + encodeURIComponent(document.getElementById('sg-search').value));
     if (sequence !== searchSequence) return;
     grid.replaceChildren();
-    document.getElementById('sg-count').textContent = `${data.total} keeper${data.total === 1 ? '' : 's'}`;
+    document.getElementById('sg-count').textContent = `${data.total} asset${data.total === 1 ? '' : 's'}`;
     if (!data.items.length) {
       const empty = el('div', {class: 'sg-empty'});
-      empty.append(el('div', {class: 'sg-empty-icon'}, '◇'), el('strong', {}, 'Make room for the good ones.'), el('div', {}, 'Open an image or video in the gallery and choose Keep.'), el('div', {}, 'Its original file and available workflow will be copied here.'));
+      empty.append(el('div', {class: 'sg-empty-icon'}, '◇'), el('strong', {}, 'Your media library is ready.'), el('div', {}, 'Open an image or video and choose Add to Smart Media Manager.'), el('div', {}, 'Its original file and available workflow will be saved here.'));
       grid.append(empty);
     }
     const grouping = document.getElementById('sg-group').value;
@@ -60,15 +60,27 @@
         if (grouping === 'rating') heading.textContent = key ? '★'.repeat(Number(key)) : 'Unrated';
         grid.append(heading); lastGroup = key;
       }
-      const card = el('button', {class: 'sg-card' + (record?.id === asset.id ? ' selected' : ''), onclick: attempt(() => openAsset(asset.id)), 'aria-label': 'Open ' + asset.title});
+      const card = el('article', {class: 'sg-card' + (record?.id === asset.id ? ' selected' : '')});
+      const preview = el('button', {class: 'sg-card-open', onclick: attempt(() => openAsset(asset.id)), 'aria-label': 'Open ' + asset.title});
       const body = el('div', {class: 'sg-card-body'});
       const meta = el('small');
-      meta.append(el('span', {}, asset.collection || 'Unsorted'), el('span', {}, asset.rating ? '★'.repeat(asset.rating) : asset.has_workflow ? 'Workflow ↗' : 'Media only'));
+      meta.append(el('span', {}, asset.collection || 'Unsorted'), el('span', {}, asset.rating ? '★'.repeat(asset.rating) : asset.has_workflow ? 'Workflow saved' : 'No workflow saved'));
       body.append(el('strong', {}, asset.title), meta);
-      card.append(media(asset, ''), body);
+      preview.append(media(asset, ''), body);
+      const actions = el('div', {class: 'sg-card-actions'});
+      actions.append(workflowButton(asset, asset.has_workflow));
+      card.append(preview, actions);
       grid.append(card);
     }
     if (data.total > data.items.length) grid.append(el('p', {class: 'sg-meta'}, 'Showing the latest 100 matches. Search to narrow the results.'));
+  }
+  function workflowButton(asset, available) {
+    const button = el('button', {class: 'sg-button primary', onclick: attempt(() => loadWorkflow(asset))},
+      window.parent !== window ? 'Load Workflow' : 'Download Workflow');
+    button.disabled = !available;
+    button.title = !available ? 'This asset has no saved UI workflow.'
+      : window.parent !== window ? 'Load the saved graph into ComfyUI' : 'Download the saved workflow JSON';
+    return button;
   }
   function field(parent, name, value, type = 'input') {
     const label = el('label', {}, name);
@@ -78,27 +90,31 @@
     return control;
   }
   async function openAsset(id, force = false) {
-    if (dirty && !force && !confirm('Discard unsaved changes to this keeper?')) return;
+    if (dirty && !force && !confirm('Discard unsaved changes to this asset?')) return;
     record = await api('assets/' + id);
     dirty = false;
     detail.hidden = false;
     detail.replaceChildren();
     const heading = el('div', {class: 'sg-detail-heading'});
-    heading.append(el('strong', {}, 'Keeper details'), el('button', {class: 'sg-icon-button', 'aria-label': 'Close details', onclick: () => {
+    heading.append(el('strong', {}, 'Asset details'), el('button', {class: 'sg-icon-button', 'aria-label': 'Close details', onclick: () => {
       if (dirty && !confirm('Discard unsaved changes?')) return;
       dirty = false; detail.hidden = true; record = null;
     }}, '×'));
-    detail.append(heading, media(record, 'sg-preview', true));
-    detail.append(el('span', {class: 'sg-badge'}, record.original.has_workflow ? 'Full workflow saved' : 'No workflow found in this file'));
+    const controls = el('div', {class: 'sg-detail-controls'});
+    controls.append(heading);
     const actions = el('div', {class: 'sg-actions'});
-    const load = el('button', {class: 'sg-button', onclick: attempt(loadWorkflow)}, window.parent !== window ? 'Open workflow in ComfyUI ↗' : 'Download restored workflow ↓');
-    load.disabled = !record.original.has_workflow;
+    const load = workflowButton(record, record.original.has_workflow);
     const original = el('a', {class: 'sg-button', href: base + `assets/${id}/media`, download: record.original.filename}, 'Original ↓');
     actions.append(load, original, el('button', {class: 'sg-button', onclick: attempt(async () => {
       const result = await api(`assets/${id}/verify`);
       message(result.ok ? `Verified ${result.files.length} archived files. ${result.unresolved_references.length} unresolved media references.` : 'Verification failed. An archived file is missing or changed.');
     })}, 'Verify files'));
-    detail.append(actions);
+    controls.append(actions, el('span', {class: 'sg-badge'}, record.original.has_workflow ? 'Full workflow saved' : 'No workflow saved'));
+    if (!record.original.has_workflow) controls.append(el('p', {class: 'sg-meta'}, record.original.has_prompt
+      ? 'Generation settings are saved, but this file does not contain a full UI workflow.'
+      : 'This file has no saved workflow. Load Workflow is unavailable.'));
+    detail.append(controls, media(record, 'sg-preview', true));
+    detail.scrollTop = 0;
     const fields = el('div', {class: 'sg-fields'});
     const title = field(fields, 'Title', record.title);
     const row = el('div', {class: 'sg-field-row'}); fields.append(row);
@@ -134,7 +150,7 @@
         const updated = {title: title.value, collection: collection.value, rating: Number(rating.value) || null,
           tags: tags.value.split(',').map(x => x.trim()).filter(Boolean), notes: notes.value,
           facts: factInputs.filter(f => f.box.isConnected).map(f => ({...f.fact, key: f.key.value, value: f.value.value, source_type: f.type.value, source_url: f.url.value}))};
-        await api('assets/' + id, 'PATCH', {expected_revision: record.revision, fields: updated, actor: 'user', reason: 'Edited in SmartGallery'});
+        await api('assets/' + id, 'PATCH', {expected_revision: record.revision, fields: updated, actor: 'user', reason: 'Edited in Smart Media Manager'});
         await openAsset(id, true); await search(); message('Saved. The original generation data is unchanged.');
       } finally { save.disabled = false; }
     })}, 'Save changes');
@@ -157,15 +173,15 @@
     const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], {type: 'application/json'}));
     const link = el('a', {href: url, download: name}); link.click(); setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
-  async function loadWorkflow() {
-    const result = await api(`assets/${record.id}/prepare`, 'POST', {});
+  async function loadWorkflow(asset) {
+    const result = await api(`assets/${asset.id}/prepare`, 'POST', {});
     if (window.parent !== window) {
       const parentOrigin = new URL(document.referrer).origin;
       if (!['localhost', '127.0.0.1', '[::1]'].includes(new URL(parentOrigin).hostname)) throw new Error('Open this gallery through the local ComfyUI sidebar.');
-      window.parent.postMessage({type: 'smartgallery:load-workflow', workflow: result.workflow, title: record.title}, parentOrigin);
+      window.parent.postMessage({type: 'smartgallery:load-workflow', workflow: result.workflow, title: asset.title}, parentOrigin);
       message('Workflow sent to ComfyUI. No generation was queued.');
     } else {
-      downloadJson(result.workflow, record.title.replace(/[<>:"/\\|?*]/g, '_') + '.json');
+      downloadJson(result.workflow, asset.title.replace(/[<>:"/\\|?*]/g, '_') + '.json');
       message('Downloaded the full graph with captured media paths restored. Open it in ComfyUI.');
     }
     if (result.unresolved_references.length) message('Workflow opened with unresolved media references. Check its input nodes before running.');
@@ -181,11 +197,11 @@
       await open(); message('Copying the original and collecting its workflow…');
       const data = await api('assets', 'POST', {file_id: fileId, actor: 'user'});
       await search(); await openAsset(data.record.id);
-      message(data.created ? 'Kept. This copy is independent of your output folder.' : 'This exact file is already in your library.');
+      message(data.created ? 'Added to Smart Media Manager. This copy is independent of your output folder.' : 'This exact file is already in Smart Media Manager.');
     }),
     keepSelected: attempt(async ids => {
       await open(); let count = 0;
-      for (const file_id of ids) { message(`Saving keeper ${++count} of ${ids.length}…`); await api('assets', 'POST', {file_id, actor: 'user'}); }
+      for (const file_id of ids) { message(`Adding asset ${++count} of ${ids.length}…`); await api('assets', 'POST', {file_id, actor: 'user'}); }
       await search(); message(`${count} selected files are now in your library.`);
     })
   };

@@ -10,7 +10,7 @@ Run from the SmartGallery checkout using its own environment. The default URL is
 .\.venv\Scripts\python.exe -m sg_library.cli get ASSET_ID
 .\.venv\Scripts\python.exe -m sg_library.cli workflow ASSET_ID
 .\.venv\Scripts\python.exe -m sg_library.cli verify ASSET_ID
-.\.venv\Scripts\python.exe -m sg_library.cli update ASSET_ID --json-file 'C:\Temp\keeper-update.json'
+.\.venv\Scripts\python.exe -m sg_library.cli update ASSET_ID --json-file 'C:\Temp\asset-update.json'
 ```
 
 Write update JSON with a structured file-writing tool, preserving actual newlines and avoiding shell interpolation of untrusted notes. Example request body:

@@ -1,1 +1,1 @@
-"""Portable keeper records and agent access for SmartGallery."""
+"""Portable media records and agent access for Smart Media Manager."""

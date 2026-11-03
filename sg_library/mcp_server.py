@@ -2,7 +2,7 @@
 from mcp.server.fastmcp import FastMCP
 from .client import Client
 
-mcp = FastMCP('SmartGallery Library')
+mcp = FastMCP('Smart Media Manager')
 client = Client()
 
 
@@ -20,14 +20,14 @@ def search_outputs(query: str = '', limit: int = 50) -> dict:
 
 @mcp.tool()
 def search_library(query: str = '', limit: int = 100) -> dict:
-    """Search keeper titles, tags, notes, collections, filenames, and sourced facts."""
+    """Search saved asset titles, tags, notes, collections, filenames, and sourced facts."""
     return client.call('assets', q=query, limit=limit)
 
 
 @mcp.tool()
 def save_keeper(source_path: str, title: str = '', collection: str = '', actor: str = 'agent') -> dict:
     """Copy an authorized local output/input and full available workflows into permanent storage.
-    Existing byte-identical keepers are returned without duplication. Never deletes sources.
+    Existing byte-identical assets are returned without duplication. Never deletes sources.
     """
     return client.call('assets', 'POST', dict(source_path=source_path, title=title, collection=collection, actor=actor))
 
