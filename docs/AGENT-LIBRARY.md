@@ -35,6 +35,10 @@ Keeper grouping reuses upstream structural workflow and positive-prompt hashes. 
 
 Library ratings and notes belong to the portable keeper record. They are separate from upstream output-gallery multi-user ratings/comments. Models, custom nodes, arbitrary file-loader formats, and media references inside nested subgraphs are not automatically bundled. Unresolved known media references are reported. A saved workflow is not a guarantee it will generate successfully on another installation.
 
+You can also right-click an individual asset in ComfyUI's **Media Assets** panel and choose **Add to Media Library**. A confirmation appears when its independent copy is saved; existing keepers are detected without duplicating them. This works with local input/output images, videos, and audio. The menu uses the asset's original file, never its preview thumbnail. Restart ComfyUI after installing or updating this integration.
+
+The installed frontend currently has no public Media Assets context-menu hook, so the extension adds a rendered menu item using the card's `data-asset-id`. A small loopback-only ComfyUI route resolves the original asset and forwards it to the gallery's existing writer. It uses ComfyUI's bundled dependencies and requires its assets API. No ComfyUI core files or gallery CORS settings are changed.
+
 ## Agent integration
 
 Add the stdio MCP server to Codex (replace the checkout path):

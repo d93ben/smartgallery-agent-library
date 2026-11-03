@@ -7,6 +7,7 @@ The upstream gallery, clustering, ratings, and interface remain available.
 - **Keep** an image or video as a byte-verified independent copy, with its full available UI graph and API prompt.
 - Browse a separate **Library** with search, collections, tags, ratings, workflow/prompt grouping, sourced facts, and restorable edit history.
 - Open SmartGallery from its own **ComfyUI left-sidebar icon**, expand it, and load a keeper's graph without queuing a generation.
+- Right-click an individual ComfyUI **Media Assets** card and choose **Add to Media Library** to keep its original file directly.
 - Use **MCP, CLI, and the included agent skill** to save keepers and maintain metadata with provenance and revision checks.
 
 **[Installation and usage →](docs/AGENT-LIBRARY.md)** · **[Agent skill →](agent-skill/smartgallery-library/SKILL.md)**

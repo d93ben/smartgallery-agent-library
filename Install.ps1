@@ -23,6 +23,7 @@ if (!(Test-Path -LiteralPath $configPath)) {
 $nodePath = Join-Path $comfyRoot 'custom_nodes\comfyui_smartgallery'
 New-Item -ItemType Directory -Path $nodePath -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'integrations\comfyui_smartgallery\__init__.py') -Destination $nodePath -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'integrations\comfyui_smartgallery\bridge.py') -Destination $nodePath -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'integrations\comfyui_smartgallery\prestartup_script.py') -Destination $nodePath -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'integrations\comfyui_smartgallery\web') -Destination $nodePath -Recurse -Force
 @{gallery_path=$PSScriptRoot} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $nodePath 'gallery.local.json') -Encoding UTF8
