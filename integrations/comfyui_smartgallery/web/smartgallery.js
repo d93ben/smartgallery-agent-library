@@ -1,14 +1,14 @@
 import { app } from '../../scripts/app.js';
 
 const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="black" stroke-width="1.8" stroke-linejoin="round"><path d="M5 5h14v14H5z"/><path d="m5 16 5-5 4 4 2-2 3 3M8 2h13a1 1 0 0 1 1 1v13"/><circle cx="15.5" cy="8.5" r="1"/></g></svg>`;
-let frame, container, host;
+let frame, container;
 
 app.registerExtension({
   name: 'SmartGallery.Library',
   settings: [{id: 'SmartGallery.URL', name: 'SmartGallery local address', type: 'text', defaultValue: 'http://127.0.0.1:8189'}],
   async setup() {
     const style = document.createElement('style');
-    style.textContent = `.sg-sidebar-icon{display:inline-block;width:1.25rem;height:1.25rem;background:currentColor;mask:url("data:image/svg+xml,${encodeURIComponent(icon)}") center/contain no-repeat}.sg-comfy-panel{height:100%;min-height:0;display:flex;flex-direction:column;background:#111117}.sg-comfy-panel.sg-expanded{position:fixed;inset:30px 30px 30px 75px;z-index:10000;border:1px solid #666;border-radius:12px;overflow:hidden;box-shadow:0 20px 80px #000a}.sg-comfy-bar{display:flex;gap:6px;padding:9px;flex-wrap:wrap;align-items:center}.sg-comfy-bar strong{font-size:12px;color:#d8caff;margin-right:auto}.sg-comfy-bar button,.sg-comfy-bar a{font:11px system-ui;background:#ffffff0e;color:#eee;border:1px solid #ffffff20;border-radius:6px;padding:6px 8px;cursor:pointer;text-decoration:none}.sg-comfy-panel iframe{border:0;flex:1;width:100%;min-height:0}.sg-comfy-help{font:11px system-ui;color:#aaa;padding:0 10px 8px}.sg-comfy-error{padding:16px;color:#ffb3b3;font:13px system-ui}`;
+    style.textContent = `.sg-sidebar-icon{display:inline-block;width:1.25rem;height:1.25rem;background:currentColor;mask:url("data:image/svg+xml,${encodeURIComponent(icon)}") center/contain no-repeat}.sg-comfy-panel{height:100%;min-height:0;display:flex;flex-direction:column;background:#111117}.sg-comfy-panel.sg-expanded{position:fixed;inset:30px 30px 30px 75px;height:auto;z-index:10000;border:1px solid #666;border-radius:12px;overflow:hidden;box-shadow:0 20px 80px #000a}.sg-comfy-bar{display:flex;gap:6px;padding:9px;flex-wrap:wrap;align-items:center}.sg-comfy-bar strong{font-size:12px;color:#d8caff;margin-right:auto}.sg-comfy-bar button,.sg-comfy-bar a{font:11px system-ui;background:#ffffff0e;color:#eee;border:1px solid #ffffff20;border-radius:6px;padding:6px 8px;cursor:pointer;text-decoration:none}.sg-comfy-panel iframe{border:0;flex:1;width:100%;min-height:0}.sg-comfy-help{font:11px system-ui;color:#aaa;padding:0 10px 8px}.sg-comfy-error{padding:16px;color:#ffb3b3;font:13px system-ui}`;
     document.head.append(style);
     function galleryUrl() {
       const url = new URL(app.ui.settings.getSettingValue('SmartGallery.URL', 'http://127.0.0.1:8189'));
@@ -17,7 +17,6 @@ app.registerExtension({
     }
     function collapse() {
       container?.classList.remove('sg-expanded');
-      if (host && container) host.append(container);
       const button = container?.querySelector('[data-expand]');
       if (button) button.textContent = 'Expand';
     }
@@ -37,15 +36,15 @@ app.registerExtension({
     app.extensionManager.registerSidebarTab({
       id: 'smartgallery-library', icon: 'sg-sidebar-icon', title: 'SmartGallery', tooltip: 'SmartGallery · outputs and permanent keepers', type: 'custom',
       render(element) {
-        host = element;
-        if (container) { element.append(container); return; }
+        element.style.height = '100%';
+        if (container) { if (container.parentElement !== element) element.append(container); return; }
         container = document.createElement('div'); container.className = 'sg-comfy-panel';
         const bar = document.createElement('div'); bar.className = 'sg-comfy-bar';
         const title = document.createElement('strong'); title.textContent = 'SmartGallery'; bar.append(title);
         const button = (text, action) => { const b = document.createElement('button'); b.textContent = text; b.onclick = action; bar.append(b); return b; };
         const expand = button('Expand', () => {
           if (container.classList.contains('sg-expanded')) collapse();
-          else { container.classList.add('sg-expanded'); document.body.append(container); expand.textContent = 'Collapse'; }
+          else { container.classList.add('sg-expanded'); expand.textContent = 'Collapse'; }
         }); expand.dataset.expand = '';
         button('Outputs', () => { frame.src = galleryUrl() + '/galleryout/'; });
         button('Library', () => { frame.src = galleryUrl() + '/galleryout/view/_root_?library='; });
@@ -60,7 +59,7 @@ app.registerExtension({
         } catch (error) {
           const message = document.createElement('p'); message.className = 'sg-comfy-error'; message.textContent = error.message; container.append(message);
         }
-        element.style.height = '100%'; element.append(container);
+        element.append(container);
       }
     });
   }
